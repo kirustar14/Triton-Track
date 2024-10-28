@@ -1,22 +1,23 @@
 import { Expense } from "../../types/types";
-import {AppContext } from '../../context/AppContext'; 
-import React, { useState, useContext } from "react";
+import { AppContext } from '../../context/AppContext'; 
+import React, { useContext } from "react";
 
-const ExpenseItem = (currentExpense: Expense) => {
-  // Exercise: Consume the AppContext here
+const ExpenseItem = ({ id, name, cost }: Expense) => {
   const { expenses, setExpenses } = useContext(AppContext);
-  const handleDeleteExpense = (currentExpense: Expense) => {
-    // Exercise: Remove expense from expenses context array
-    const removedExpenses = expenses.filter(expense => expense.id !== currentExpense.id);
+
+  const handleDeleteExpense = () => {
+    console.log("Deleting expense:", { id, name, cost }); // Log the expense being deleted
+    const removedExpenses = expenses.filter(expense => expense.id !== id);
     setExpenses(removedExpenses);
+    console.log("Updated expenses:", removedExpenses); // Log updated expenses
   };
 
   return (
     <li className="list-group-item d-flex justify-content-between align-items-center">
-      <div>{currentExpense.name}</div>
-      <div>${currentExpense.cost}</div>
+      <div>{name}</div>
+      <div>${cost}</div>
       <div>
-        <button onClick={() => handleDeleteExpense(currentExpense)}>x</button>
+        <button onClick={handleDeleteExpense}>x</button>
       </div>
     </li>
   );

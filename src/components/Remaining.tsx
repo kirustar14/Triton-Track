@@ -16,7 +16,7 @@ const Remaining = () => {
 
   useEffect(() => {
     if (remainingBalance < 0) {
-      alert("You have exceeeded your budget!");
+      alert("You have exceeded your budget!");
     }
   }, [remainingBalance]); 
   

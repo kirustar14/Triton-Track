@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { Expense } from "../types/types";
+import React, { act } from 'react'; 
 
 // Exercise: Create add budget to the context
 
