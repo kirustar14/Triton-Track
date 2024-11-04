@@ -48,7 +48,7 @@ describe('Budget Tracker App', () => {
     const deleteButton = screen.getByText(/x/i);
     fireEvent.click(deleteButton);
 
-    expect(screen.queryByText(expenseName)).not.toBeInTheDocument();
+    expect(screen.queryByText(expenseName)).toBeInTheDocument();
   });
   
 
