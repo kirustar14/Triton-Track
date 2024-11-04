@@ -1,29 +1,42 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { fetchBudget } from "../utils/budget-utils";
 
 const Remaining = () => {
-  const { expenses, budget } = useContext(AppContext);
+  const { expenses } = useContext(AppContext);
+  const [budget, setBudget] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadBudget = async () => {
+      try {
+        const budgetValue = await fetchBudget();
+        setBudget(budgetValue);
+      } catch (error) {
+        console.error("Failed to load budget:", error);
+      }
+    };
+
+    loadBudget();
+  }, []);
 
   const totalExpenses = expenses.reduce((total, item) => {
-    return (total = total + item.cost);
+    return total + item.cost;
   }, 0);
 
-  
-  const alertType = totalExpenses > budget ? "alert-danger" : "alert-success";
+  const alertType = budget !== null && totalExpenses > budget ? "alert-danger" : "alert-success";
 
-  // Exercise: Create an alert when Remaining is less than 0.
-  const remainingBalance = budget - totalExpenses; 
+  // Ensure budget is not null before calculating remainingBalance
+  const remainingBalance = budget !== null ? budget - totalExpenses : 0;
 
   useEffect(() => {
     if (remainingBalance < 0) {
       alert("You have exceeded your budget!");
     }
-  }, [remainingBalance]); 
-  
+  }, [remainingBalance]);
 
   return (
     <div className={`alert ${alertType}`}>
-      <span>Remaining: ${budget - totalExpenses}</span>
+      <span>Remaining: ${budget !== null ? remainingBalance : "Loading..."}</span>
     </div>
   );
 };
