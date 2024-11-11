@@ -6,34 +6,39 @@ import { fetchExpenses } from "../../utils/expense-utils"; // Import fetchExpens
 
 const ExpenseList = () => {
   const { expenses, setExpenses } = useContext(AppContext);
-  // Fetch expenses on component mount
-  useEffect(() => {
-    loadExpenses();
-    }, []);
 
-    // Fetch expenses on component mount
+  // Fetch expenses only once on component mount
   useEffect(() => {
     loadExpenses();
-    }, []);
-  
-    // Function to load expenses and handle errors
-    const loadExpenses = async () => {
+  }, []); // Empty dependency array ensures this runs only on mount
+
+  // Function to load expenses and handle errors
+  const loadExpenses = async () => {
     try {
-      const expenseList = await fetchExpenses();
-      setExpenses(expenseList);
+      const expenseList = await fetchExpenses(); // Fetch expenses from API
+      if (Array.isArray(expenseList)) {
+        setExpenses(expenseList); // Set expenses only if it's an array
+      } else {
+        console.error("Invalid expense data:", expenseList);
+      }
     } catch (err: any) {
-      console.log(err.message);
+      console.log("Error loading expenses:", err.message);
     }
-    };
-  
+  };
+
+  // Ensure expenses is not undefined or null
+  const safeExpenses = expenses || []; 
 
   return (
     <ul className="list-group">
-      {expenses.map((expense: Expense) => (
-        <ExpenseItem key={expense.id} id={expense.id} description={expense.description} cost={expense.cost} />
-        ))}
-
-
+      {safeExpenses.map((expense: Expense) => (
+        <ExpenseItem 
+          key={expense.id} 
+          id={expense.id} 
+          description={expense.description} 
+          cost={expense.cost} 
+        />
+      ))}
     </ul>
   );
 };
